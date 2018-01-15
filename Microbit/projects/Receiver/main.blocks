@@ -1,0 +1,14 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables></variables>
+  <block type="device_forever" id="!O#wV%l:]tR6@nWfBr3p" x="0" y="0">
+    <statement name="HANDLER">
+      <block type="device_print_message" id="}rysSQY{xNG:2{vGB=]f">
+        <value name="text">
+          <shadow type="text" id="kQs$D@[TKs/v%.GGt:Ua">
+            <field name="TEXT">1</field>
+          </shadow>
+        </value>
+      </block>
+    </statement>
+  </block>
+</xml>
