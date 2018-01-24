@@ -1,10 +1,13 @@
 radio.setGroup(1);
 
-radio.onDataPacketReceived((packet) => {
-    setValue(packet.receivedNumber);
-});
+let name = "Receiver";
 
-setValue(0);
+basic.showString(name);
+basic.showString(name[0]);
+
+radio.onDataPacketReceived(({ receivedString }) => {
+    basic.showString(receivedString);
+});
 
 function setValue(value: number) {
     for (let x = 0; x < 5; x++) {
