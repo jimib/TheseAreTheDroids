@@ -1,0 +1,18 @@
+{
+    "target": "microbit",
+    "targetVersion": "2.1.43",
+    "name": "Receiver",
+    "meta": {},
+    "editor": "tsprj",
+    "pubId": "",
+    "pubCurrent": false,
+    "_rev": null,
+    "id": "6ebfdb00-4365-485e-b0d5-c31d86f29808",
+    "recentUse": 1580766072,
+    "modificationTime": 1580766072,
+    "blobId": null,
+    "blobVersion": null,
+    "blobCurrent": false,
+    "isDeleted": false,
+    "path": "Receiver"
+}
