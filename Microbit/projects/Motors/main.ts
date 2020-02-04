@@ -8,15 +8,29 @@ radio.onDataPacketReceived((packet) => {
     updateSpeed();
 });
 
-pins.analogSetPeriod(AnalogPin.P0, 20000);
-pins.digitalWritePin(DigitalPin.P6, 0);
-pins.digitalWritePin(DigitalPin.P7, 1);
 
+input.onButtonPressed(Button.A, function () {
+    speed = Math.max( -1023, speed - 100 );
+    updateSpeed();
+});
+
+input.onButtonPressed(Button.B, function () {
+    speed = Math.min(1023, speed + 100 );
+    updateSpeed();
+});
+
+pins.analogWritePin(AnalogPin.P0, speed);
+pins.analogSetPeriod(AnalogPin.P0, 20000);
+updateSpeed();
 basic.showString("M");
 
 function updateSpeed() {
     setValue(speed);
-    pins.analogWritePin(AnalogPin.P0, speed * 40);
+    //determine the direction
+    pins.digitalWritePin(DigitalPin.P1, speed > 0 ? 0 : 1 );
+    pins.digitalWritePin(DigitalPin.P2, speed > 0 ? 1 : 0 );
+    //determine the magnitude
+    pins.analogWritePin(AnalogPin.P0, Math.abs(speed) );
 }
 
 function setValue(value: number) {
@@ -24,8 +38,8 @@ function setValue(value: number) {
     //return;
     for (let x = 0; x < 5; x++) {
         for (let y = 0; y < 5; y++) {
-            let iv = x + (y * 5);
-            if (iv < value) {
+            let iv = 10 * ( x + (y * 5) );
+            if ( iv < value ) {
                 led.plot(x, y);
             } else {
                 led.unplot(x, y);
