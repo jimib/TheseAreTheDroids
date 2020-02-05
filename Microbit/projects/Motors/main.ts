@@ -1,5 +1,9 @@
 let speed = 0;
 let count = 0;
+let SPEED_RANGE = 100;
+
+let MIN_POWER = 200;
+let MAX_POWER = 1023;
 
 let name = control.deviceSerialNumber().toString();
 
@@ -42,11 +46,11 @@ radio.onDataPacketReceived((packet) => {
 
 
 input.onButtonPressed(Button.A, function () {
-    setSpeed( speed - 100 );
+    setSpeed( speed - 10 );
 });
 
 input.onButtonPressed(Button.B, function () {
-    setSpeed( speed + 100 );
+    setSpeed( speed + 10 );
 });
 
 pins.analogWritePin(AnalogPin.P0, speed);
@@ -55,14 +59,26 @@ pins.analogSetPeriod(AnalogPin.P0, 20000);
 setSpeed( 0 );
 
 function setSpeed( val:number ) {
+    //NOTE: speed is received as a value between -100 and 100
+    //this is then remapped to -1023 > 1023
     if( !isNaN( val ) ){
         //set a record of the value
-        speed = Math.min( 1023, Math.max( -1023, val ) );
+        speed = Math.min( SPEED_RANGE, Math.max( -SPEED_RANGE, val ) );
+
         //determine the direction
         pins.digitalWritePin(DigitalPin.P1, speed > 0 ? 0 : 1 );
         pins.digitalWritePin(DigitalPin.P2, speed > 0 ? 1 : 0 );
-        //determine the magnitude
-        pins.analogWritePin(AnalogPin.P0, Math.abs(speed) );
+        //determine the power we need to send to the wheels
+        let power = 
+            //CHECK THERES ENOUGH SPEED
+            (Math.abs( speed ) > 0.05 * SPEED_RANGE) 
+            ?
+            //SET THE POWER BASED ON THE VALID POWER RANGE AVAIALBLE
+            MIN_POWER + (MAX_POWER - MIN_POWER) * Math.abs( speed / 100 ) 
+            :
+            //SET IT TO ZERO 
+            0;
+        pins.analogWritePin(AnalogPin.P0, power );
         //update the led to help us debug
         //writeSpeedToLed( Math.abs( speed ) );
     }
