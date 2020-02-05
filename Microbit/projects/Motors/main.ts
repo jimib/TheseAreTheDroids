@@ -5,13 +5,11 @@ let name = control.deviceSerialNumber().toString();
 
 let delimiter = serial.delimiters(Delimiters.Comma);
 serial.onDataReceived(delimiter, () => {
-    count++;
-    printMessage(count.toString());
     parseMessage( serial.readUntil( delimiter ) );
 });
 
 function printMessage( message:string ){
-    serial.writeLine( message );
+    //serial.writeLine( message );
 }
 
 function parseMessage( message:string ){
@@ -38,12 +36,8 @@ function parseMessage( message:string ){
 radio.setGroup(1);
 
 radio.onDataPacketReceived((packet) => {
-    basic.clearScreen();
-    basic.showString("D");
     //parse the message
     parseMessage( packet.receivedString );
-    // speed = packet.receivedNumber;
-    // updateSpeed();
 });
 
 
@@ -70,7 +64,7 @@ function setSpeed( val:number ) {
         //determine the magnitude
         pins.analogWritePin(AnalogPin.P0, Math.abs(speed) );
         //update the led to help us debug
-        writeSpeedToLed(speed);
+        //writeSpeedToLed( Math.abs( speed ) );
     }
 }
 
@@ -78,7 +72,7 @@ function writeSpeedToLed(value: number) {
     //return;
     for (let x = 0; x < 5; x++) {
         for (let y = 0; y < 5; y++) {
-            let iv = 10 * ( x + (y * 5) );
+            let iv = (1023 / 25) * ( x + (y * 5) );
             if ( iv < value ) {
                 led.plot(x, y);
             } else {
